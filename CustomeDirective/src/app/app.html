@@ -1,0 +1,201 @@
+<div class="container py-4">
+  <div
+    class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2 mb-4"
+  >
+    <div>
+      <h2 class="mb-1">Secure KYC Onboarding</h2>
+    </div>
+  </div>
+
+  <div class="row g-4">
+    <!--  KYC FORM (LEFT) -->
+    <div class="col-lg-6">
+      <div class="card shadow-sm">
+        <div class="card-header bg-white fw-semibold">KYC Form</div>
+
+        <div class="card-body">
+          <div class="row g-3">
+            <!-- Full Name -->
+            <div class="col-12">
+              <label class="form-label"> Full Name <span class="text-danger">*</span> </label>
+
+              <!-- [(ngModel)] = Two-Way Data Binding
+                   - Reads fullName from TS and shows it in the input
+                   - Updates fullName in TS whenever user types
+
+                   appRequiredError = Custom Directive
+                   - Applies required-field error styling (red border/glow)
+
+                   [requiredField] = Property Binding to directive input
+                   - Marks this field as required for the directive logic
+
+                   [showError] = Property Binding to directive input
+                   - Tells directive when to show the error style:
+                     only after submit attempt AND when invalid -->
+              <input
+                class="form-control"
+                [(ngModel)]="fullName"
+                apprequirederror
+                [requiredField]="true"
+                [showError]="isSubmitted && isFullNameInvalid"
+                placeholder="Enter full name"
+              />
+
+              <!-- @if = Built-in Angular control flow (built-in directive)
+                   Displays the error message only when the condition is true -->
+              @if (isSubmitted && isFullNameInvalid) {
+                <div class="text-danger small mt-1">Full Name is required.</div>
+              }
+            </div>
+
+            <!-- Mobile -->
+            <div class="col-md-6">
+              <label class="form-label"> Mobile Number <span class="text-danger">*</span> </label>
+
+              <!-- [(ngModel)] = Two-Way Data Binding (mobile)
+
+                   appInputRule="digits" = Custom Directive
+                   - Forces digits-only input (removes alphabets/symbols)
+
+                   appRequiredError + [requiredField] + [showError]
+                   - Same required-field error styling mechanism -->
+              <input
+                class="form-control"
+                [(ngModel)]="mobile"
+                appinputrule="digit"
+                maxlength="10"
+                apprequirederror
+                [requiredField]="true"
+                [showError]="isSubmitted && isMobileInvalid"
+                placeholder="10-digit mobile"
+              />
+
+              @if (isSubmitted && isMobileInvalid) {
+                <div class="text-danger small mt-1">Mobile must be exactly 10 digits.</div>
+              }
+            </div>
+
+            <!-- PAN -->
+            <div class="col-md-6">
+              <label class="form-label"> PAN <span class="text-danger">*</span> </label>
+
+              <!-- [(ngModel)] = Two-Way Data Binding (pan)
+
+                   appInputRule="uppercase" = Custom Directive
+                   - Converts whatever user types into uppercase
+
+                   appRequiredError + [requiredField] + [showError]
+                   - Highlights this input as error after submit when PAN is invalid -->
+              <input
+                class="form-control"
+                [(ngModel)]="pan"
+                appinputrule="uppercase"
+                maxlength="10"
+                apprequirederror
+                [requiredField]="true"
+                [showError]="isSubmitted && isPanInvalid"
+                placeholder="ABCDE1234F"
+              />
+
+              @if (isSubmitted && isPanInvalid) {
+                <div class="text-danger small mt-1">PAN must be 10 characters.</div>
+              }
+            </div>
+
+            <!-- Email -->
+            <div class="col-12">
+              <label class="form-label"> Email <span class="text-danger">*</span> </label>
+
+              <!-- [(ngModel)] = Two-Way Data Binding (email)
+
+                   appRequiredError + [requiredField] + [showError]
+                   - Shows required error styling only after submit attempt if email is invalid -->
+              <input
+                class="form-control"
+                [(ngModel)]="email"
+                apprequirederror
+                [requiredField]="true"
+                [showError]="isSubmitted && isEmailInvalid"
+                placeholder="name@example.com"
+              />
+
+              @if (isSubmitted && isEmailInvalid) {
+                <div class="text-danger small mt-1">Enter a valid email address.</div>
+              }
+            </div>
+
+            <!-- Buttons -->
+            <div class="col-12 d-flex gap-2 mt-2">
+              <!-- (click) = Event Binding
+                   Calls submit() method in TS when button is clicked -->
+              <button class="btn btn-primary" type="button" (click)="submit()">Submit KYC</button>
+
+              <!-- (click) = Event Binding
+                   Calls reset() method in TS to clear the form -->
+              <button class="btn btn-outline-secondary" type="button" (click)="reset()">
+                Reset
+              </button>
+            </div>
+
+            <!-- @if = Built-in Angular control flow
+                 Shows a global warning only after submit attempt AND when form is invalid -->
+            @if (isSubmitted && isFormInvalid) {
+              <div class="col-12">
+                <div class="alert alert-warning py-2 mb-0 small">
+                  Please fix validation errors before submitting.
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--  SUBMITTED APPLICATIONS (RIGHT) -->
+    <div class="col-lg-6">
+      <div class="card shadow-sm">
+        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+          <span class="fw-semibold">Submitted Applications</span>
+
+          <!-- {{ }} = Interpolation
+               Prints the value of applications.length in the UI -->
+          <span class="badge text-bg-light border">Total: {{ applications.length }}</span>
+        </div>
+
+        <div class="card-body p-0">
+          <!-- @if / @else = Built-in Angular control flow
+               Shows either "empty state" or the list depending on array length -->
+          @if (applications.length === 0) {
+            <div class="p-4 text-muted">
+              No applications submitted yet. Submit the KYC form to see records here.
+            </div>
+          } @else {
+            <div class="list-group list-group-flush">
+              <!-- @for = Built-in Angular loop control flow
+                   Iterates over applications array
+                   track a.id = track by unique id for better performance and correct DOM reuse -->
+              @for (a of applications; track a.id) {
+                <div class="list-group-item">
+                  <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                      <!-- {{ }} = Interpolation (shows values on UI) -->
+                      <div class="fw-semibold">#{{ a.id }} - {{ a.fullName }}</div>
+
+                      <!-- {{ }} = Interpolation -->
+                      <div class="text-muted small">
+                        Mobile: {{ a.mobile }} | PAN: {{ a.pan }} | Email: {{ a.email }}
+                      </div>
+                    </div>
+
+                    <!-- {{ }} = Interpolation -->
+                    <span class="badge text-bg-success">{{ a.status }}</span>
+                  </div>
+                </div>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
