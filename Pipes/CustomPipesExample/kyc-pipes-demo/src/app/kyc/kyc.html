@@ -1,0 +1,197 @@
+<div class="container my-4">
+    <div class="row g-3">
+  
+      <!--  LEFT SIDE: KYC FORM
+           - Uses [(ngModel)] for Two-Way Binding
+           - Uses @if for conditional validation messages -->
+      <div class="col-12 col-lg-6">
+        <div class="card shadow-sm border-0">
+          <div class="card-header bg-primary text-white fw-semibold">Secure KYC Form</div>
+          <div class="card-body">
+  
+            <!--  Full Name Field -->
+            <div class="mb-3">
+              <label class="form-label">Full Name</label>
+  
+              <!-- Two-Way Binding:
+                   [(ngModel)]="fullName"
+                   - Updates the component variable when user types
+                   - Updates the input box if the variable changes in TS
+                   - Keeps UI and TS always in sync -->
+              <input class="form-control"
+                     [(ngModel)]="fullName"
+                     placeholder="Enter full name">
+  
+              <!-- Conditional Rendering:
+                   @if checks the validation flags from the component.
+                   - isSubmitted becomes true only after submit() is clicked
+                   - isFullNameInvalid is a getter that checks empty/space-only value -->
+              @if (isSubmitted && isFullNameInvalid) {
+                <div class="text-danger small mt-1">Full Name is required.</div>
+              }
+            </div>
+  
+            <!-- Mobile Field -->
+            <div class="mb-3">
+              <label class="form-label">Mobile (10 digits)</label>
+  
+              <!-- Two-Way Binding:
+                   [(ngModel)]="mobile"
+                   - mobile variable holds the current input value
+  
+                   HTML Constraint:
+                   maxlength="10"
+                   - prevents typing more than 10 characters (UI-level protection) -->
+              <input class="form-control"
+                     [(ngModel)]="mobile"
+                     maxlength="10"
+                     placeholder="9876543210">
+  
+              <!-- Validation Message:
+                   Shown only after submit attempt (isSubmitted = true)
+                   and when mobile length is not exactly 10 digits -->
+              @if (isSubmitted && isMobileInvalid) {
+                <div class="text-danger small mt-1">Mobile must be 10 digits.</div>
+              }
+            </div>
+  
+            <!-- PAN Field -->
+            <div class="mb-3">
+              <label class="form-label">PAN</label>
+  
+              <!-- Two-Way Binding:
+                   [(ngModel)]="pan"
+                   - pan variable always contains latest PAN value
+  
+                   HTML Constraint:
+                   maxlength="10"
+                   - PAN is always expected to be 10 characters -->
+              <input class="form-control"
+                     [(ngModel)]="pan"
+                     maxlength="10"
+                     placeholder="ABCDE1234F">
+  
+              <!-- Validation Message:
+                   Shown after submit attempt if PAN is not exactly 10 characters -->
+              @if (isSubmitted && isPanInvalid) {
+                <div class="text-danger small mt-1">PAN must be 10 characters.</div>
+              }
+            </div>
+  
+            <!-- Email Field -->
+            <div class="mb-3">
+              <label class="form-label">Email</label>
+  
+              <!-- Two-Way Binding:
+                   [(ngModel)]="email"
+                   - email variable stays in sync with what user types -->
+              <input class="form-control"
+                     [(ngModel)]="email"
+                     placeholder="name@example.com">
+  
+              <!-- Validation Message:
+                   Shown after submit attempt if email fails regex validation -->
+              @if (isSubmitted && isEmailInvalid) {
+                <div class="text-danger small mt-1">Enter a valid email.</div>
+              }
+            </div>
+  
+            <!-- Event Binding:
+                 (click)="submit()"
+                 - calls submit() method in component when button is clicked -->
+            <button class="btn btn-primary w-100" (click)="submit()">Submit KYC</button>
+          </div>
+        </div>
+      </div>
+  
+      <!--  RIGHT SIDE: SUBMITTED APPLICATIONS DASHBOARD
+           - Uses @if for empty state
+           - Uses @for for rendering list items
+           - Uses Built-in + Custom Pipes for display formatting -->
+      <div class="col-12 col-lg-6">
+        <div class="card shadow-sm border-0">
+          <div class="card-header bg-primary text-white fw-semibold d-flex justify-content-between">
+            <span>Submitted Applications</span>
+  
+            <!-- Interpolation + Built-in Number Pipe:
+                 applications.length -> total records
+                 number:'1.0-0' -> show as whole number (no decimals) -->
+            <span class="small opacity-75">Total: {{ applications.length | number:'1.0-0' }}</span>
+          </div>
+  
+          <div class="card-body">
+  
+            <!-- Conditional Rendering:
+                 If no records exist, show a friendly empty message -->
+            @if (applications.length === 0) {
+              <div class="alert alert-warning mb-0">No submissions yet.</div>
+            } @else {
+  
+              <div class="list-group">
+  
+                <!-- Loop Rendering:
+                     @for creates one list item for each application record
+  
+                     track app.id:
+                     Helps Angular efficiently update DOM when list changes
+                     (important when inserting new record at top) -->
+                @for (app of applications; track app.id) {
+                  <div class="list-group-item d-flex justify-content-between align-items-start">
+  
+                    <div>
+                      <!-- Built-in Pipe: titlecase
+                           Converts name into proper display casing
+                           Example: "pranaya rout" -> "Pranaya Rout" -->
+                      <div class="fw-semibold">{{ app.fullName | titlecase }}</div>
+  
+                      <!-- Custom Pipe: mobileFormat
+                           Formats a 10-digit mobile number into readable form
+                           Example: "9876543210" -> "+91 98765 43210" -->
+                      <div class="text-muted small">Mobile: {{ app.mobile | mobileFormat:'+91' }}</div>
+  
+                      <!-- Custom Pipe: mask
+                           Masks sensitive PAN partially
+                           mask:2:3:'*'
+                           - show first 2 characters
+                           - mask the middle using '*'
+                           - show last 3 characters -->
+                      <div class="text-muted small">PAN: {{ app.pan | mask:2:3:'*' }}</div>
+  
+                      <!-- Custom Pipe: mask (email)
+                           Masks email to protect sensitive data in UI
+                           mask:2:12:'*' keeps first 2 and last 12 visible (as per your choice) -->
+                      <div class="text-muted small">Email: {{ app.email | mask:2:12:'*' }}</div>
+                    </div>
+  
+                    <div class="text-end">
+  
+                      <!-- Property Binding:
+                           [class]="getBadgeClass(app.status)"
+                           - dynamically applies Bootstrap badge class based on status
+                           - getBadgeClass() returns something like:
+                             'bg-success', 'bg-warning text-dark', etc. -->
+                      <span class="badge" [class]="getBadgeClass(app.status)">
+  
+                        <!-- Custom Pipe: statusLabel
+                             Converts backend status into user-friendly label
+                             Example:
+                             Pending  -> Under Review
+                             Verified -> Approved
+                             Rejected -> Needs Re-Upload -->
+                        {{ app.status | statusLabel }}
+                      </span>
+                    </div>
+  
+                  </div>
+                }
+              </div>
+  
+            }
+          </div>
+        </div>
+      </div>
+  
+    </div>
+  </div>
+  
+  

@@ -1,0 +1,305 @@
+<div class="container my-4">
+
+    <!-- Control Flow Binding:
+         @if checks whether "order" has data.
+         - If order exists → show UI
+         - Else → show warning message -->
+    @if (order) {
+  
+      <!-- 1st Row: Only 3 Cards -->
+      <div class="row g-3 mb-3">
+  
+        <!-- 1) Order Summary -->
+        <div class="col-12 col-lg-4">
+          <div class="card shadow-sm border-0 h-100">
+            <div class="card-header bg-primary text-white py-2 fw-semibold">Order Summary</div>
+            <div class="card-body">
+  
+              <div class="d-flex justify-content-between align-items-start">
+                <div>
+                  <div class="text-muted small">Order ID</div>
+  
+                  <!-- Interpolation Binding:
+                       {{ ... }} renders a TypeScript value into HTML.
+  
+                       Pipe Chaining:
+                       order.orderId | uppercase | slice:0:18
+                       - uppercase → converts the text to UPPERCASE
+                       - slice:0:18 → shows only first 18 characters -->
+                  <div class="h5 mb-1">{{ order.orderId | uppercase | slice:0:18 }}</div>
+  
+                  <div class="text-muted small mt-2">Order Date</div>
+  
+                  <!-- Date Pipe (Parameterized):
+                       date:'dd-MMM-yyyy, hh:mm a'
+                       - formats a Date object into a user-friendly string
+                       - Example: 01-Feb-2026, 10:35 AM -->
+                  <div class="fw-semibold">{{ order.orderDate | date:'dd-MMM-yyyy, hh:mm a' }}</div>
+                </div>
+  
+                <!-- Property Binding:
+                     [ngClass]="..."
+                     - dynamically sets CSS class based on the status
+                     - getStatusBadgeClass() returns Bootstrap badge class -->
+                <span class="badge fs-6" [ngClass]="getStatusBadgeClass(order.status)">
+                  <!-- Interpolation: displays status text -->
+                  {{ order.status }}
+                </span>
+              </div>
+  
+              <hr />
+  
+              <div class="d-flex justify-content-between">
+                <span class="text-muted">Total Items</span>
+  
+                <!-- Binding + Number Pipe:
+                     getTotalItems(order) returns a number
+                     number:'1.0-0' shows a whole number (no decimals) 
+                     number:'minIntegerDigits.minFractionDigits-maxFractionDigits' -->
+                <span class="fw-bold">{{ getTotalItems(order) | number:'1.0-0' }}</span>
+              </div>
+  
+              <div class="d-flex justify-content-between mt-2">
+                <span class="text-muted">Grand Total</span>
+                <span class="fw-bold">
+  
+                  <!-- Currency Pipe (Parameterized):
+                       currency:'INR':'symbol':'1.2-2'
+                       - INR → format as Indian Rupee
+                       - symbol → show ₹
+                       - 1.2-2 → always show 2 decimal places -->
+                  {{ order.totals.grandTotal | currency:'INR':'symbol':'1.2-2' }}
+                </span>
+              </div>
+  
+              <div class="text-muted small mt-2">
+                Total GST:
+  
+                <!-- Currency Pipe:
+                     Formats GST numeric value as ₹ currency -->
+                <b>{{ order.totals.totalGst | currency:'INR':'symbol':'1.2-2' }}</b>
+              </div>
+  
+            </div>
+          </div>
+        </div>
+  
+        <!-- 2) Customer -->
+        <div class="col-12 col-lg-4">
+          <div class="card shadow-sm border-0 h-100">
+            <div class="card-header bg-primary text-white py-2 fw-semibold">Customer</div>
+            <div class="card-body">
+  
+              <div class="d-flex justify-content-between align-items-start">
+                <div>
+  
+                  <!-- Pipe Chaining:
+                       titlecase | slice:0:26
+                       - titlecase → converts "john doe" to "John Doe"
+                       - slice:0:26 → restricts long names to first 26 chars -->
+                  <div class="h5 mb-1">{{ order.customer.fullName | titlecase | slice:0:26 }}</div>
+  
+                  <!-- Interpolation:
+                       Directly prints email/mobile strings -->
+                  <div class="text-muted small">{{ order.customer.email }}</div>
+                  <div class="text-muted small">Mobile: {{ order.customer.mobile }}</div>
+                </div>
+  
+                <!-- Conditional Expression Binding:
+                     order.customer.isPremium ? 'bg-success' : 'bg-secondary'
+                     - sets badge color based on boolean -->
+                <span class="badge fs-6" [ngClass]="order.customer.isPremium ? 'bg-success' : 'bg-secondary'">
+                  <!-- Conditional Text Rendering -->
+                  {{ order.customer.isPremium ? 'Premium' : 'Standard' }}
+                </span>
+              </div>
+  
+              <hr />
+  
+              <div class="text-muted small mb-1">Delivery Address</div>
+              <div class="small">
+                <div class="fw-semibold">{{ order.deliveryAddress.line1 }}</div>
+  
+                <!-- Control Flow Binding:
+                     show line2 only if it exists (not empty/null) -->
+                @if (order.deliveryAddress.line2) {
+                  <div>{{ order.deliveryAddress.line2 }}</div>
+                }
+  
+                <div>
+                  <!-- Titlecase Pipe:
+                       makes city/state look proper in UI -->
+                  {{ order.deliveryAddress.city | titlecase }},
+                  {{ order.deliveryAddress.state | titlecase }} -
+                  <b>{{ order.deliveryAddress.pincode }}</b>
+                </div>
+              </div>
+  
+            </div>
+          </div>
+        </div>
+  
+        <!-- 3) Payment -->
+        <div class="col-12 col-lg-4">
+          <div class="card shadow-sm border-0 h-100">
+            <div class="card-header bg-primary text-white py-2 fw-semibold">Payment</div>
+            <div class="card-body">
+  
+              <div class="d-flex justify-content-between align-items-start">
+                <div>
+                  <div class="text-muted small">Method</div>
+                  <div class="fw-semibold">{{ order.payment.method }}</div>
+  
+                  <div class="text-muted small mt-2">Transaction</div>
+  
+                  <!-- Safe Conditional Rendering inside interpolation:
+                       If transactionId exists → show formatted value
+                       Else → show 'N/A'
+  
+                       Pipe Chaining:
+                       uppercase | slice:0:18
+                       - uppercase → makes id uppercase
+                       - slice → prevents long id from breaking UI -->
+                  <div class="fw-semibold">
+                    {{ order.payment.transactionId ? (order.payment.transactionId | uppercase | slice:0:18) : 'N/A' }}
+                  </div>
+  
+                  <!-- Control Flow:
+                       show "Paid On" only if paidOn date exists -->
+                  @if (order.payment.paidOn) {
+                    <div class="text-muted small mt-2">
+                      Paid On:
+  
+                      <!-- Date Pipe:
+                           formats the Date into readable form -->
+                      <b>{{ order.payment.paidOn | date:'dd-MMM, hh:mm a' }}</b>
+                    </div>
+                  }
+                </div>
+  
+                <!-- [ngClass] binding:
+                     Payment status controls badge color -->
+                <span class="badge fs-6" [ngClass]="getPaymentBadgeClass(order.payment.paymentStatus)">
+                  {{ order.payment.paymentStatus }}
+                </span>
+              </div>
+  
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Order Items -->
+      <div class="card shadow-sm border-0 mb-2">
+        <div class="card-header bg-primary text-white py-2 d-flex justify-content-between align-items-center">
+          <div class="fw-semibold">Order Items</div>
+          <div class="small opacity-75">
+            Total Items:
+  
+            <!-- Number Pipe:
+                 shows total items without decimals -->
+            <b>{{ getTotalItems(order) | number:'1.0-0' }}</b>
+          </div>
+        </div>
+  
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-sm align-middle mb-0">
+              <thead class="table-light">
+                <tr>
+                  <th>SKU</th>
+                  <th>Product</th>
+                  <th class="text-end">Unit</th>
+                  <th class="text-end">Qty</th>
+                  <th class="text-end">Disc</th>
+                  <th class="text-end">GST</th>
+                  <th class="text-end">Line Total</th>
+                </tr>
+              </thead>
+  
+              <tbody>
+                <!-- Loop Binding:
+                     @for renders one <tr> per item in order.items
+                     track item.sku helps Angular optimize DOM updates -->
+                @for (item of order.items; track item.sku) {
+                  <tr>
+  
+                    <!-- Uppercase Pipe:
+                         makes SKU consistent in UI -->
+                    <td class="text-muted">{{ item.sku | uppercase }}</td>
+  
+                    <!-- Titlecase Pipe:
+                         displays product names in proper format -->
+                    <td class="fw-semibold">{{ item.productName | titlecase }}</td>
+  
+                    <!-- Currency Pipe:
+                         formats numbers as INR with ₹ symbol -->
+                    <td class="text-end">{{ item.unitPrice | currency:'INR':'symbol':'1.0-2' }}</td>
+  
+                    <!-- Number Pipe:
+                         ensures qty appears as integer -->
+                    <td class="text-end">{{ item.quantity | number:'1.0-0' }}</td>
+  
+                    <!-- Percent Pipe:
+                         percent pipe expects 0.10 for 10%, so we convert 10 → 0.10 using /100 -->
+                    <td class="text-end">{{ (item.discountPercent / 100) | percent:'1.0-0' }}</td>
+  
+                    <!-- Percent Pipe:
+                         converts 18 → 0.18 so percent pipe shows 18% -->
+                    <td class="text-end">{{ (item.gstPercent / 100) | percent:'1.0-0' }}</td>
+  
+                    <!-- Currency Pipe:
+                         lineTotal is calculated earlier (API / component)
+                         template only formats and displays it -->
+                    <td class="text-end fw-bold">{{ item.lineTotal | currency:'INR':'symbol':'1.2-2' }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Totals (right aligned) -->
+      <div class="row">
+        <div class="col-12 col-lg-5 ms-auto">
+          <div class="border rounded-3 p-3 bg-white shadow-sm">
+            <div class="d-flex justify-content-between">
+              <span class="text-muted">Subtotal (Taxable)</span>
+  
+              <!-- Currency Pipe:
+                   formats subtotal as INR -->
+              <span class="fw-semibold">{{ order.totals.subTotalTaxable | currency:'INR':'symbol':'1.2-2' }}</span>
+            </div>
+  
+            <div class="d-flex justify-content-between mt-2">
+              <span class="text-muted">Total GST</span>
+  
+              <!-- Currency Pipe:
+                   formats GST as INR -->
+              <span class="fw-semibold">{{ order.totals.totalGst | currency:'INR':'symbol':'1.2-2' }}</span>
+            </div>
+  
+            <hr class="my-2" />
+  
+            <div class="d-flex justify-content-between">
+              <span class="fw-bold">Grand Total</span>
+  
+              <!-- Currency Pipe:
+                   formats grand total as INR -->
+              <span class="fw-bold">{{ order.totals.grandTotal | currency:'INR':'symbol':'1.2-2' }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+    } @else {
+      <!-- Fallback UI:
+           If order is null/undefined, show a friendly message -->
+      <div class="alert alert-warning shadow-sm">
+        No order details found.
+      </div>
+    }
+  
+  </div>
+  
