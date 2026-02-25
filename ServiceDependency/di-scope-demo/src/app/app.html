@@ -1,0 +1,33 @@
+<!-- Top navigation bar -->
+<nav class="navbar navbar-dark bg-dark">
+  <div class="container py-1">
+    <a class="navbar-brand fw-semibold" routerLink="/">MyApp</a>
+    <div class="d-flex align-items-center gap-2">
+      <!-- Angular control flow: shown when user is logged in -->
+      @if (auth.isLoggedIn()) {
+        <!-- Display currently logged-in user's name -->
+        <span class="text-white-50 small">
+          Signed in as <b class="text-white">{{ auth.getUserName() }}</b>
+        </span>
+
+        <!-- Logout button -->
+        <button class="btn btn-outline-light btn-sm" (click)="logout()">
+          <i class="bi bi-box-arrow-right"></i> Logout
+        </button>
+      } @else {
+        <!-- Login link shown when user is not logged in -->
+        <a class="btn btn-outline-light btn-sm" routerLink="/login">
+          <i class="bi bi-box-arrow-in-right"></i> Login
+        </a>
+
+        <!-- Register link for new users -->
+        <a class="btn btn-warning btn-sm" routerLink="/register">
+          <i class="bi bi-person-plus"></i> Register
+        </a>
+      }
+    </div>
+  </div>
+</nav>
+
+<!-- Router outlet where routed components are rendered -->
+<router-outlet></router-outlet>

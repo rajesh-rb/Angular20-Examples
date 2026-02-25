@@ -1,0 +1,66 @@
+<div class="container py-5">
+  <div class="row g-4 justify-content-center align-items-stretch">
+    <!-- Left card: Welcome / Authentication actions -->
+    <div class="col-12 col-md-10 col-lg-5">
+      <div class="card shadow-sm h-100">
+        <div class="card-body p-4 p-md-5">
+          <!-- Page heading -->
+          <h2 class="fw-bold mb-2">Welcome to MyApp</h2>
+
+          <!-- Supporting description text -->
+          <p class="text-muted mb-4">Login or create a new account to continue.</p>
+
+          <!-- Angular control flow: shown when user is logged in -->
+          @if (auth.isLoggedIn()) {
+            <!-- Success alert showing logged-in user information -->
+            <div class="alert alert-success d-flex align-items-center gap-2 mb-4" role="alert">
+              <i class="bi bi-check-circle-fill"></i>
+              <div>
+                You are signed in as <b>{{ auth.getUserName() }}</b
+                >.
+              </div>
+            </div>
+
+            <!-- Navigation link to create another account -->
+            <a class="btn btn-primary" routerLink="/register">
+              <i class="bi bi-person-plus"></i> Create another account
+            </a>
+          } @else {
+            <!-- Action buttons shown when user is not logged in -->
+            <div class="d-flex gap-2">
+              <a class="btn btn-primary" routerLink="/login">
+                <i class="bi bi-box-arrow-in-right"></i> Login
+              </a>
+
+              <a class="btn btn-outline-secondary" routerLink="/register">
+                <i class="bi bi-person-plus"></i> Register
+              </a>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- Right card: Demo credentials information -->
+    <div class="col-12 col-md-10 col-lg-5">
+      <div class="card shadow-sm h-100">
+        <div class="card-body p-4">
+          <!-- Header section with title and badge -->
+          <div class="d-flex align-items-center justify-content-between mb-2">
+            <h6 class="text-muted mb-0">Demo Credentials</h6>
+            <span class="badge text-bg-light">For testing</span>
+          </div>
+
+          <!-- Highlighted credentials block -->
+          <div class="border rounded-3 p-3 bg-light">
+            <div class="mb-2"><b>Username:</b> demo</div>
+            <div><b>Password:</b> Demo@123</div>
+          </div>
+
+          <!-- Helper text -->
+          <div class="small text-muted mt-3">Use these credentials to login quickly.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
