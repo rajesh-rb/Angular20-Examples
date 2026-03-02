@@ -1,0 +1,111 @@
+<div class="min-vh-100 d-flex flex-column bg-light">
+  <!-- HEADER (Navbar) -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+      <!-- routerLink="/home"
+           When the user clicks the brand/logo, Angular navigates to /home
+           without reloading the page (client-side navigation). -->
+      <a class="navbar-brand fw-bold" routerLink="/home">ShopSphere</a>
+
+      <!-- This button is purely Bootstrap behavior (mobile menu toggle) -->
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#mainNav"
+        aria-controls="mainNav"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="mainNav">
+        <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
+          <li class="nav-item">
+            <!-- routerLink="/home"
+                 Navigates to the Home route when clicked.
+
+                 routerLinkActive="active"
+                 Adds the Bootstrap "active" class automatically when the current URL
+                 matches this link (used to highlight the active menu item).
+
+                 [routerLinkActiveOptions]="{ exact: true }"
+                 Ensures the link is active ONLY for the exact /home route.
+                 (Example: it will NOT be active for /home/anything or other partial matches.) -->
+            <a
+              class="nav-link"
+              routerLink="/home"
+              routerLinkActive="active"
+              [routerLinkActiveOptions]="{ exact: true }"
+            >
+              Home
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <!-- routerLink="/products"
+                 Navigates to the product listing page.
+
+                 routerLinkActive="active"
+                 Highlights this link when the current URL starts with /products
+                 (e.g., /products and /products/101 will both mark it active). -->
+            <a class="nav-link" routerLink="/products" routerLinkActive="active">Shop</a>
+          </li>
+
+          <li class="nav-item">
+            <!-- routerLink="/about"
+                 Navigates to the About page.
+
+                 routerLinkActive="active"
+                 Highlights the menu item when /about is the active route. -->
+            <a class="nav-link" routerLink="/about" routerLinkActive="active">About</a>
+          </li>
+
+          <li class="nav-item ms-lg-3">
+            <!-- routerLink="/products"
+                 Another navigation link that routes to /products.
+                 Still client-side navigation; no page refresh. -->
+            <a class="btn btn-outline-light btn-sm" routerLink="/products">View Catalog</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- MAIN CONTENT AREA -->
+  <main class="container flex-grow-1 d-flex align-items-center my-3">
+    <div class="w-100">
+      <!-- router-outlet
+           This is the placeholder where Angular renders the component
+           of the currently matched route.
+
+           Example:
+           - URL /home      -> Home component renders here
+           - URL /products  -> Products component renders here
+           - URL /products/101 -> ProductDetails component renders here
+           - invalid URL -> NotFound component renders here -->
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="border-top bg-white">
+    <div class="container py-3">
+      <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
+        <div class="fw-bold">ShopSphere</div>
+
+        <div class="text-muted small text-center">
+          Premium essentials • Fast delivery • Easy returns
+        </div>
+
+        <div class="d-flex gap-3 small">
+          <!-- Footer links also use routerLink for SPA navigation -->
+          <a class="text-decoration-none" routerLink="/about">Company</a>
+          <a class="text-decoration-none" routerLink="/products">Shop</a>
+          <a class="text-decoration-none" routerLink="/home">Support</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+</div>

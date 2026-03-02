@@ -1,0 +1,88 @@
+<div class="bg-white border rounded-3 shadow-sm p-4 p-md-5">
+  <div class="row align-items-center g-4">
+    <div class="col-lg-7">
+      <span class="badge text-bg-dark mb-3">Limited Time Offer</span>
+      <h1 class="fw-bold display-6 mb-2">Smart essentials for modern work</h1>
+      <p class="text-muted fs-5 mb-4">
+        Shop premium accessories and productivity gear with fast delivery and easy returns.
+      </p>
+
+      <div class="d-flex flex-column flex-sm-row gap-2">
+        <!-- Routing: routerLink="/products"
+             Navigates to the Products route (path: 'products') without refreshing the page.
+             Angular updates the URL to /products and renders the Products component in <router-outlet>. -->
+        <a class="btn btn-primary btn-lg" routerLink="/products">Shop Now</a>
+
+        <!-- Routing: routerLink + query params
+             routerLink="/products" navigates to the Products page.
+             [queryParams] appends query string values to the URL, producing:
+             /products?category=electronics
+
+             Note: Query params are NOT part of the route path itself.
+             They are "extra data" usually used for filtering/sorting.
+             In Products component, we will read this using ActivatedRoute.queryParamMap. -->
+        <a
+          class="btn btn-outline-secondary btn-lg"
+          routerLink="/products"
+          [queryParams]="{ category: 'electronics' }"
+        >
+          Electronics
+        </a>
+      </div>
+
+      <div class="d-flex flex-wrap gap-2 mt-4">
+        <span class="badge text-bg-light border">Free delivery over ₹999</span>
+        <span class="badge text-bg-light border">7-day returns</span>
+        <span class="badge text-bg-light border">Secure payments</span>
+      </div>
+    </div>
+
+    <div class="col-lg-5">
+      <div class="border rounded-3 bg-light p-4">
+        <div class="d-flex justify-content-between align-items-start">
+          <div>
+            <div class="text-muted small">Featured Product</div>
+            <div class="fw-semibold">Workstation Bundle</div>
+            <div class="text-muted small">Keyboard • Mouse • USB-C Hub</div>
+          </div>
+          <span class="badge text-bg-success">25% OFF</span>
+        </div>
+
+        <div class="display-2 text-center my-3">🛒</div>
+
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <div class="fs-4 fw-bold mb-0">₹4,499</div>
+            <div class="text-muted small text-decoration-line-through">₹5,999</div>
+          </div>
+
+          <!-- Routing: another routerLink to /products
+               This is the same client-side navigation as above, just styled differently.
+               Clicking it routes the user to the Products component inside <router-outlet>. -->
+          <a class="btn btn-dark" routerLink="/products">View Deals</a>
+        </div>
+      </div>
+
+      <div class="row g-2 mt-3">
+        <div class="col-4">
+          <div class="border rounded-3 p-2 text-center bg-white">
+            <div class="fw-semibold">4.6★</div>
+            <div class="text-muted small">Ratings</div>
+          </div>
+        </div>
+        <div class="col-4">
+          <div class="border rounded-3 p-2 text-center bg-white">
+            <div class="fw-semibold">24h</div>
+            <div class="text-muted small">Dispatch</div>
+          </div>
+        </div>
+        <div class="col-4">
+          <div class="border rounded-3 p-2 text-center bg-white">
+            <div class="fw-semibold">7d</div>
+            <div class="text-muted small">Returns</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

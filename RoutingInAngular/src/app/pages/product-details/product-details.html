@@ -1,0 +1,158 @@
+@if (product) {
+  <div class="bg-white border rounded-3 shadow-sm p-3 p-md-4">
+    <div class="d-flex justify-content-between align-items-start gap-2 mb-3">
+      <div class="me-2">
+        <div class="text-muted small">{{ product.brand }}</div>
+        <h2 class="fw-bold mb-1">{{ product.name }}</h2>
+
+        <div class="d-flex align-items-center flex-wrap gap-2">
+          <span class="badge text-bg-success">★ {{ product.rating }}</span>
+
+          @if (product.inStock) {
+            <span class="badge text-bg-success">In Stock</span>
+          } @else {
+            <span class="badge text-bg-danger">Out of Stock</span>
+          }
+
+          <span class="badge text-bg-light border">Free delivery over ₹999</span>
+        </div>
+      </div>
+
+      <!-- Programmatic navigation:
+           This button calls backToProducts() in the component (.ts),
+           and inside that method we do:
+             this.router.navigate(['/products']);
+           So clicking Back changes the route to /products and loads the Products component
+           in <router-outlet> without refreshing the browser page. -->
+      <button class="btn btn-outline-secondary btn-sm" type="button" (click)="backToProducts()">
+        Back
+      </button>
+    </div>
+
+    <div class="row g-3 align-items-center">
+      <div class="col-md-4">
+        <div class="border rounded-3 bg-light text-center p-3">
+          <div class="text-muted small mb-1">Product Image</div>
+          <div class="display-3 mb-0">📦</div>
+        </div>
+
+        <div class="d-flex gap-2 mt-2">
+          <span class="badge text-bg-dark">Bestseller</span>
+          <span class="badge text-bg-light border">Secure packaging</span>
+        </div>
+      </div>
+
+      <div class="col-md-8">
+        <p class="text-muted mb-2">{{ product.shortDescription }}</p>
+
+        <div class="d-flex align-items-baseline flex-wrap gap-2 mb-2">
+          <div class="fs-2 fw-bold">₹{{ product.price }}</div>
+          <div class="text-muted text-decoration-line-through">₹{{ product.mrp }}</div>
+          <span class="badge text-bg-success"
+            >{{ discountPercent(product.mrp, product.price) }}% OFF</span
+          >
+        </div>
+
+        <div class="d-flex flex-column flex-sm-row gap-2 mb-2">
+          <button class="btn btn-primary" type="button" [disabled]="!product.inStock">
+            Add to Cart
+          </button>
+          <button class="btn btn-success" type="button" [disabled]="!product.inStock">
+            Buy Now
+          </button>
+          <button class="btn btn-secondary" type="button">Wishlist</button>
+        </div>
+
+        <div class="row g-2 mt-1">
+          <div class="col-6 col-lg-3">
+            <div class="border rounded-3 p-2 text-center">
+              <div class="fw-semibold">7 Days</div>
+              <div class="text-muted small">Returns</div>
+            </div>
+          </div>
+          <div class="col-6 col-lg-3">
+            <div class="border rounded-3 p-2 text-center">
+              <div class="fw-semibold">24h</div>
+              <div class="text-muted small">Dispatch</div>
+            </div>
+          </div>
+          <div class="col-6 col-lg-3">
+            <div class="border rounded-3 p-2 text-center">
+              <div class="fw-semibold">COD</div>
+              <div class="text-muted small">Available</div>
+            </div>
+          </div>
+          <div class="col-6 col-lg-3">
+            <div class="border rounded-3 p-2 text-center">
+              <div class="fw-semibold">Secure</div>
+              <div class="text-muted small">Payments</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion mt-3" id="detailsAccordion">
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="headingOne">
+              <button
+                class="accordion-button collapsed"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#collapseOne"
+                aria-expanded="false"
+                aria-controls="collapseOne"
+              >
+                Product Details
+              </button>
+            </h2>
+
+            <div
+              id="collapseOne"
+              class="accordion-collapse collapse"
+              aria-labelledby="headingOne"
+              data-bs-parent="#detailsAccordion"
+            >
+              <div class="accordion-body">
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <div class="fw-semibold mb-2">Highlights</div>
+                    <ul class="text-muted mb-0">
+                      @for (h of product.highlights; track h) {
+                        <li>{{ h }}</li>
+                      }
+                    </ul>
+                  </div>
+
+                  <div class="col-md-6">
+                    <div class="fw-semibold mb-2">Specifications</div>
+                    <div class="table-responsive">
+                      <table class="table table-sm table-bordered align-middle mb-0">
+                        <tbody>
+                          @for (s of product.specs; track s.label) {
+                            <tr>
+                              <td class="text-muted" style="width: 40%">{{ s.label }}</td>
+                              <td class="fw-semibold">{{ s.value }}</td>
+                            </tr>
+                          }
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+} @else {
+  <div class="alert alert-danger mb-0" role="alert">
+    Product not found.
+
+    <!-- routerLink="/products"
+         If the product id in the URL is invalid (e.g., /products/999),
+         we show this message and provide a routerLink back to /products.
+         Clicking "Shop" navigates to /products without refreshing the page. -->
+    Go back to <a class="alert-link" routerLink="/products">Shop</a>.
+  </div>
+}

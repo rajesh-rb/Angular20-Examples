@@ -1,0 +1,30 @@
+<div class="bg-white border rounded-3 p-4 p-md-5 shadow-sm text-center">
+  <div class="display-1 fw-bold">404</div>
+  <h2 class="fw-bold mb-2">We can’t find that page</h2>
+  <p class="text-muted mb-4">
+    The page you’re looking for may have been removed, renamed, or is temporarily unavailable.
+  </p>
+
+  <div class="d-flex flex-column flex-sm-row justify-content-center gap-2">
+    <!-- routerLink="/home"
+         Navigates to the Home route (path: 'home') using Angular Router.
+         This is SPA navigation: URL changes to /home, and the Home component
+         loads inside <router-outlet> without a full page refresh. -->
+    <a class="btn btn-primary" routerLink="/home">Go to Home</a>
+
+    <!-- routerLink="/products"
+         Navigates to the Products list route (path: 'products').
+         URL becomes /products and Angular renders the Products component
+         inside <router-outlet> (no browser reload). -->
+    <a class="btn btn-outline-dark" routerLink="/products">Shop Products</a>
+  </div>
+
+  <div class="mt-4 text-muted small">
+    Need help? Visit
+
+    <!-- routerLink="/about"
+         Navigates to the About route (path: 'about') through Angular routing.
+         Useful for guiding users from the 404 page to a valid page. -->
+    <a class="text-decoration-none" routerLink="/about">About</a>.
+  </div>
+</div>
