@@ -1,0 +1,28 @@
+@if (profile) {
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <div class="d-flex justify-content-between align-items-start">
+        <div>
+          <h3 class="mb-1">{{ profile.fullName }}</h3>
+          <p class="text-muted mb-0">City: {{ profile.city }}</p>
+        </div>
+
+        <!-- Navigate to Edit Profile page
+             Note: /profile/edit route is protected by CanActivate AND uses CanDeactivate -->
+        <a class="btn btn-outline-primary btn-sm" routerLink="/profile/edit">Edit Profile</a>
+      </div>
+
+      <hr />
+
+      <p class="mb-1"><strong>Phone:</strong> {{ profile.phone }}</p>
+      <p class="mb-0"><strong>Bio:</strong> {{ profile.bio }}</p>
+
+      <div class="alert alert-success mt-3 mb-0">
+        You reached this page because <strong>CanActivate</strong> allowed navigation (you are
+        logged in).
+      </div>
+    </div>
+  </div>
+} @else {
+  <div class="alert alert-warning">Profile not found.</div>
+}

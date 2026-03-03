@@ -1,0 +1,38 @@
+<!-- Bootstrap Navbar: stays visible across all pages (root layout) -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container">
+    <!-- Brand / Logo: navigates to Home route -->
+    <a class="navbar-brand" routerLink="/">Guard Demo</a>
+    <div class="d-flex gap-2 align-items-center">
+      <!-- Public navigation link -->
+      <a class="btn btn-outline-light btn-sm" routerLink="/">Home</a>
+
+      <!-- Protected link (Profile route is guarded by CanActivate)
+           If not logged in and user clicks it, requireLoginGuard will redirect to /login -->
+      <a class="btn btn-outline-light btn-sm" routerLink="/profile">Profile</a>
+
+      <!-- Angular control flow syntax (@if / @else)
+           We show Login button if user is NOT logged in, otherwise show Welcome + Logout -->
+      @if (!auth.isLoggedIn()) {
+        <!-- Show Login button only when user is logged out -->
+        <a class="btn btn-warning btn-sm" routerLink="/login">Login</a>
+      } @else {
+        <!-- Show current user's name when logged in -->
+        <span class="text-white small me-2">
+          Welcome, <strong>{{ auth.currentUser()?.fullName }}</strong>
+        </span>
+
+        <!-- Logout button: calls logout() method in App component
+             After logout, CanActivate blocks /profile and UI switches back to Login -->
+        <button class="btn btn-danger btn-sm" (click)="logout()">Logout</button>
+      }
+    </div>
+  </div>
+</nav>
+
+<!-- Main page container:
+     router-outlet renders the currently matched route component here
+     (Home / Login / Profile / Edit Profile) -->
+<div class="container my-4">
+  <router-outlet></router-outlet>
+</div>

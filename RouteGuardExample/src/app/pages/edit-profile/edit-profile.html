@@ -1,0 +1,64 @@
+@if (model) {
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <div class="d-flex justify-content-between align-items-start">
+        <div>
+          <h3 class="mb-1">Edit Profile</h3>
+          <p class="text-muted mb-0">Update your profile details safely.</p>
+        </div>
+
+        <!-- Navigate back to Profile page (protected route) -->
+        <a class="btn btn-outline-secondary btn-sm" routerLink="/profile">Back</a>
+      </div>
+
+      <hr />
+
+      <!-- Show feedback message after Save:
+           - Success message (green)
+           - Error message (red) -->
+      @if (message) {
+        <div
+          class="alert"
+          [class.alert-success]="messageType === 'success'"
+          [class.alert-danger]="messageType === 'danger'"
+        >
+          {{ message }}
+        </div>
+      }
+
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label class="form-label">Full Name</label>
+          <input class="form-control" [(ngModel)]="model.fullName" />
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <label class="form-label">Phone</label>
+          <input class="form-control" [(ngModel)]="model.phone" />
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <label class="form-label">City</label>
+          <input class="form-control" [(ngModel)]="model.city" />
+        </div>
+
+        <div class="col-12 mb-3">
+          <label class="form-label">Bio</label>
+          <textarea class="form-control" rows="3" [(ngModel)]="model.bio"></textarea>
+        </div>
+      </div>
+
+      <div class="d-flex gap-2">
+        <button class="btn btn-primary" (click)="save()">Save Changes</button>
+        <a class="btn btn-outline-dark" routerLink="/">Go Home</a>
+      </div>
+
+      <div class="alert alert-warning mt-3 mb-0">
+        If you edit values and try to navigate away without saving,
+        <strong>CanDeactivate</strong> will warn you and prevent accidental data loss.
+      </div>
+    </div>
+  </div>
+} @else {
+  <div class="alert alert-warning">Unable to load profile for editing.</div>
+}
