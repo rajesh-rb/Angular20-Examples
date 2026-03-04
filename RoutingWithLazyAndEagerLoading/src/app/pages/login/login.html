@@ -1,0 +1,29 @@
+<div class="container py-5" style="max-width: 520px">
+  <div class="card shadow-sm">
+    <div class="card-body p-4">
+      <h3 class="fw-bold mb-2">Sign In</h3>
+      <p class="text-muted mb-4">Use your account to view profile and orders.</p>
+
+      <div class="mb-3">
+        <label class="form-label">Email</label>
+        <input class="form-control" [(ngModel)]="email" placeholder="Enter your email" />
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Password</label>
+        <input
+          class="form-control"
+          type="password"
+          [(ngModel)]="password"
+          placeholder="Enter your password"
+        />
+      </div>
+
+      @if (errorMessage) {
+        <div class="alert alert-danger">{{ errorMessage }}</div>
+      }
+
+      <button class="btn btn-dark w-100" (click)="loginNow()">Login</button>
+    </div>
+  </div>
+</div>
