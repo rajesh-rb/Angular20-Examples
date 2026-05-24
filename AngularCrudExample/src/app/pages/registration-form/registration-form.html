@@ -1,0 +1,57 @@
+<form [formGroup]="registrationForm" (ngSubmit)="submitForm()">
+
+    Name
+    <input type="text" formControlName="name">
+
+    Email
+    <input type="email" formControlName="email">
+    @if(registrationForm.controls.email.invalid && registrationForm.controls.email.touched) {
+    <div>Invalid Email</div>
+    }
+
+    Password
+    <input type="password" formControlName="password">
+
+    Gender
+    <label>
+        <input type="radio" value="male" formControlName="gender"> Male
+    </label>
+
+    <label>
+        <input type="radio" value="female" formControlName="gender"> Female
+    </label>
+
+    Country
+    <select formControlName="country">
+        <option value="">Select</option>
+        <option value="india">India</option>
+        <option value="usa">USA</option>
+        <option value="uk">UK</option>
+    </select>
+
+    Skills
+    <select formControlName="skills" multiple>
+        <option value="Angular">Angular</option>
+        <option value="React">React</option>
+        <option value="Vue">Vue</option>
+    </select>
+
+    Accept Terms
+    <input type="checkbox" formControlName="acceptTerms">
+
+    Phones
+
+    <div formArrayName="phones">
+        <div>
+            @for(item of Phones.controls; track $index) {
+            <input type="text" [formControlName]="$index">
+            <button type="button" (click)="removePhone($index)">Remove</button>
+            }
+        </div>
+    </div>
+
+    <button type="button" (click)="addPhone()">Add Phone</button>
+
+    <button type="submit">Submit</button>
+
+</form>
